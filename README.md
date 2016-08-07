@@ -9,6 +9,8 @@ python tos.py fileu&p
 
 i.e. python tos.py accounts.txt
 
+If you are experiencing any issues make sure you have ran: pip install -r requirements.txt
+
 # Formatting
 Your file (fileu&p) should be structured as follows:
 
