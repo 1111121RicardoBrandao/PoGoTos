@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-"""accept-tos.py: Example script to accept in-game Terms of Service"""
+"""tos.py - Accept PokemonGo ToS for multiple accounts using file."""
 
 from pgoapi import PGoApi
 from pgoapi.utilities import f2i
@@ -21,6 +21,9 @@ def accept_tos(username, password):
         req.mark_tutorial_complete(tutorials_completed = 0, send_marketing_emails = False, send_push_notifications = False)
         response = req.call()
         print('Accepted Terms of Service for {}'.format(username))
-        #print('Response dictionary: \r\n{}'.format(pprint.PrettyPrinter(indent=4).pformat(response)))
 
-accept_tos(str(sys.argv[1]), 'Password!')
+with open(str(sys.argv[1])) as f:
+        credentials = [x.strip().split(':') for x in f.readlines()]
+
+for username,password in credentials:
+        accept_tos(username, password)
