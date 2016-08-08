@@ -14,22 +14,22 @@ import threading
 import sys, getopt
 
 def accept_tos(username, password):
-        try:
-                api = PGoApi()
-                api.set_position(40.7127837, -74.005941, 0.0)
-                api.login('ptc', username, password)
-                time.sleep(2)
-                req = api.create_request()
-                req.mark_tutorial_complete(tutorials_completed = 0, send_marketing_emails = False, send_push_notifications = False)
-                response = req.call()
-                print('Accepted Terms of Service for {}'.format(username))
-        except ServerSideRequestThrottlingException as e:
-                print('Server side throttling, Waiting 10 seconds.')
-                time.sleep(10)
-                accept_tos()
+        api = PGoApi()
+        api.set_position(40.7127837, -74.005941, 0.0)
+        api.login('ptc', username, password)
+        time.sleep(2)
+        req = api.create_request()
+        req.mark_tutorial_complete(tutorials_completed = 0, send_marketing_emails = False, send_push_notifications = False)
+        response = req.call()
+        print('Accepted Terms of Service for {}'.format(username))
 
 with open(str(sys.argv[1])) as f:
         credentials = [x.strip().split(':') for x in f.readlines()]
 
 for username,password in credentials:
-        accept_tos(username, password)
+        try:
+                accept_tos(username, password)
+        except ServerSideRequestThrottlingException as e:
+                print('Server side throttling, Waiting 10 seconds.')
+                time.sleep(10)
+                accept_tos(username, password)
