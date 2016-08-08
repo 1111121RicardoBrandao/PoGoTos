@@ -7,6 +7,7 @@ from pgoapi import PGoApi
 from pgoapi.utilities import f2i
 from pgoapi import utilities as util
 from pgoapi.exceptions import AuthException
+from pgoapi.exceptions import ServerSideRequestThrottlingException
 import pprint
 import time
 import threading
@@ -26,4 +27,9 @@ with open(str(sys.argv[1])) as f:
         credentials = [x.strip().split(':') for x in f.readlines()]
 
 for username,password in credentials:
-        accept_tos(username, password)
+        try:
+                accept_tos(username, password)
+        except ServerSideRequestThrottlingException as e:
+                print('Server side throttling, Waiting 10 seconds.')
+                time.sleep(10)
+                accept_tos(username, password)
